@@ -1,4 +1,4 @@
-package com.jpmc;
+package com.jpmc.realtimepositionsystem;
 
 import static org.junit.Assert.assertTrue;
 
