@@ -1,8 +1,5 @@
 package com.jpmc.realtimepositionsystem;
 
-import com.jpmc.realtimepositionsystem.service.TradeExecutionService;
-import com.jpmc.realtimepositionsystem.tradeentities.TradeType;
-
 /**
  * Hello world!
  *

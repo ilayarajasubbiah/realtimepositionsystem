@@ -5,10 +5,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.jpmc.realtimepositionsystem.tradeentities.Account;
-import com.jpmc.realtimepositionsystem.tradeentities.Position;
-import com.jpmc.realtimepositionsystem.tradeentities.Trade;
-import com.jpmc.realtimepositionsystem.tradeentities.TradeType;
+import com.jpmc.realtimepositionsystem.domain.Account;
+import com.jpmc.realtimepositionsystem.domain.Position;
+import com.jpmc.realtimepositionsystem.domain.Trade;
+import com.jpmc.realtimepositionsystem.domain.TradeType;
 
 public class PositionService {
 

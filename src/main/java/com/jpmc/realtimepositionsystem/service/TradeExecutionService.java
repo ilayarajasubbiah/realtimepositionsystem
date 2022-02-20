@@ -2,9 +2,9 @@ package com.jpmc.realtimepositionsystem.service;
 
 import java.util.Map;
 
-import com.jpmc.realtimepositionsystem.tradeentities.Position;
-import com.jpmc.realtimepositionsystem.tradeentities.Trade;
-import com.jpmc.realtimepositionsystem.tradeentities.TradeType;
+import com.jpmc.realtimepositionsystem.domain.Position;
+import com.jpmc.realtimepositionsystem.domain.Trade;
+import com.jpmc.realtimepositionsystem.domain.TradeType;
 
 public class TradeExecutionService {
 

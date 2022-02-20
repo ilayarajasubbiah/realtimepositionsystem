@@ -1,4 +1,4 @@
-package com.jpmc.realtimepositionsystem.tradeentities;
+package com.jpmc.realtimepositionsystem.domain;
 
 public class Account {
     private String accountId;

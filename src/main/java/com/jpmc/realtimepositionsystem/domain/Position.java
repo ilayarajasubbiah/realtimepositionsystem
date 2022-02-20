@@ -1,4 +1,4 @@
-package com.jpmc.realtimepositionsystem.tradeentities;
+package com.jpmc.realtimepositionsystem.domain;
 
 import java.util.ArrayList;
 import java.util.HashMap;

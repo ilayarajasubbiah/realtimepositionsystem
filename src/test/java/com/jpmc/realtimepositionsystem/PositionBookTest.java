@@ -10,9 +10,9 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.jpmc.realtimepositionsystem.tradeentities.Position;
+import com.jpmc.realtimepositionsystem.domain.Position;
 import com.jpmc.realtimepositionsystem.service.TradeExecutionService;
-import com.jpmc.realtimepositionsystem.tradeentities.TradeType;
+import com.jpmc.realtimepositionsystem.domain.TradeType;
 
 public class PositionBookTest {
 
