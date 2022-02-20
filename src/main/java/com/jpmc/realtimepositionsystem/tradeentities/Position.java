@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class Position {
 	private Account account;
-	private Integer newQuantity;
+	private Integer currentQuantity;
 	// Security Quantity
 	private Map<String, Integer> securityPosition = new HashMap<String, Integer>();
 	// Security trade map
@@ -20,6 +20,11 @@ public class Position {
 
 	public void setTrades(String securitySymbol, List<Trade> trades) {
 		this.trades.put(securitySymbol, new ArrayList<>());
+	}
+
+	public void addTrade(String securitySymbol, Trade trade)
+	{
+		this.getTrades(securitySymbol).add(trade);
 	}
 
 	public Integer getSecurityPosition(String securitySymbol) {
@@ -38,17 +43,17 @@ public class Position {
 		return account;
 	}
 
-	public Integer getNewQuantity() {
-		return newQuantity;
+	public Integer getCurrentQuantity() {
+		return currentQuantity;
 	}
 
-	public void setNewQuantity(Integer newQuantity) {
-		this.newQuantity = newQuantity;
+	public void setCurrentQuantity(Integer currentQuantity) {
+		this.currentQuantity = currentQuantity;
 	}
 
 	@Override
 	public String toString() {
-		return newQuantity + " " + trades + " ";
+		return currentQuantity + " " + trades + " ";
 	}
 
 }

@@ -17,67 +17,77 @@ import com.jpmc.realtimepositionsystem.tradeentities.TradeType;
 public class PositionBookTest {
 
 	private Map<String, Position> accountPositionsMap;
-	private TradeExecutionService execution;
+	private TradeExecutionService executionService;
 
 	@Before
 	public void init() {
 		accountPositionsMap = new HashMap<String, Position>();
-		execution = new TradeExecutionService();
+		executionService = new TradeExecutionService();
 	}
 
+
+	//Securities
 	@Test
-	public void buySecuritiesForSameAccount() throws Exception {
-		accountPositionsMap = execution.executeTrade(1, TradeType.BUY, "ACC1", "SEC1", 12);
+	public void buySecurityForSameAccount() throws Exception {
+		accountPositionsMap = executionService.executeTrade(1, TradeType.BUY, "ACC1", "SEC1", 12);
 		assertEquals("ACC1", accountPositionsMap.get("ACC1").getAccount().toString());
-		assertEquals(new Integer(12), accountPositionsMap.get("ACC1").getNewQuantity());
+		assertEquals(new Integer(12), accountPositionsMap.get("ACC1").getCurrentQuantity());
 	}
 
 	@Test
-	public void buySecuritiesThenAgainBuySecuritiesForSameAccount() throws Exception {
-		accountPositionsMap = execution.executeTrade(1, TradeType.BUY, "ACC1", "SEC1", 12);
-		accountPositionsMap = execution.executeTrade(2, TradeType.BUY, "ACC1", "SEC1", 12);
+	public void buyMultipleSecuritiesForSameAccount() throws Exception {
+		accountPositionsMap = executionService.executeTrade(1, TradeType.BUY, "ACC1", "SEC1", 12);
+		accountPositionsMap = executionService.executeTrade(2, TradeType.BUY, "ACC1", "SEC1", 12);
 		assertEquals("ACC1", accountPositionsMap.get("ACC1").getAccount().toString());
-		assertEquals(new Integer(24), accountPositionsMap.get("ACC1").getNewQuantity());
+		assertEquals(new Integer(24), accountPositionsMap.get("ACC1").getCurrentQuantity());
 	}
 
 	@Test
-	public void buySecuritiesThenSellAndUpdateSecuritiesForSameAccount() throws Exception {
-		accountPositionsMap = execution.executeTrade(1, TradeType.BUY, "ACC1", "SEC1", 12);
-		accountPositionsMap = execution.executeTrade(2, TradeType.BUY, "ACC1", "SEC1", 12);
-		accountPositionsMap = execution.executeTrade(3, TradeType.SELL, "ACC1", "SEC1", 12);
+	public void buyAndSellSecuritiesForSameAccount() throws Exception {
+		accountPositionsMap = executionService.executeTrade(1, TradeType.BUY, "ACC1", "SEC1", 12);
+		accountPositionsMap = executionService.executeTrade(2, TradeType.BUY, "ACC1", "SEC1", 12);
+		accountPositionsMap = executionService.executeTrade(3, TradeType.SELL, "ACC1", "SEC1", 12);
 		assertEquals("ACC1", accountPositionsMap.get("ACC1").getAccount().toString());
-		assertEquals(new Integer(12), accountPositionsMap.get("ACC1").getNewQuantity());
+		assertEquals(new Integer(12), accountPositionsMap.get("ACC1").getCurrentQuantity());
 	}
 
 	@Test
-	public void buySecuritiesThenAgainBuySecuritiesForMultipleAccount() throws Exception {
-		accountPositionsMap = execution.executeTrade(1, TradeType.BUY, "ACC1", "SEC1", 12);
-		accountPositionsMap = execution.executeTrade(2, TradeType.BUY, "ACC1", "SEC1", 12);
-		accountPositionsMap = execution.executeTrade(1, TradeType.BUY, "ACC2", "SEC2", 20);
-		accountPositionsMap = execution.executeTrade(2, TradeType.BUY, "ACC2", "SEC1", 12);
+	public void buySecuritiesForMultipleAccount() throws Exception {
+		accountPositionsMap = executionService.executeTrade(1, TradeType.BUY, "ACC1", "SEC1", 12);
+		accountPositionsMap = executionService.executeTrade(2, TradeType.BUY, "ACC1", "SEC1", 12);
+		accountPositionsMap = executionService.executeTrade(1, TradeType.BUY, "ACC2", "SEC2", 20);
+		accountPositionsMap = executionService.executeTrade(2, TradeType.BUY, "ACC2", "SEC1", 12);
 
-		assertEquals(new Integer(24), accountPositionsMap.get("ACC1").getNewQuantity());
+		assertEquals(new Integer(24), accountPositionsMap.get("ACC1").getCurrentQuantity());
 	}
 
 	
 	@Test
-	public void buySecuritiesThenSellAndUpdateSecuritiesForMultipleAccount() throws Exception {
-		accountPositionsMap = execution.executeTrade(1, TradeType.BUY, "ACC1", "SEC1", 12);
-		accountPositionsMap = execution.executeTrade(2, TradeType.BUY, "ACC1", "SEC1", 12);
-		accountPositionsMap = execution.executeTrade(3, TradeType.SELL, "ACC1", "SEC1", 12);
-		accountPositionsMap = execution.executeTrade(4, TradeType.BUY, "ACC2", "SEC234", 30);
+	public void buyAndSellSecuritiesForMultipleAccount() throws Exception {
+		accountPositionsMap = executionService.executeTrade(1, TradeType.BUY, "ACC1", "SEC1", 12);
+		accountPositionsMap = executionService.executeTrade(2, TradeType.BUY, "ACC1", "SEC1", 12);
+		accountPositionsMap = executionService.executeTrade(3, TradeType.SELL, "ACC1", "SEC1", 12);
+		accountPositionsMap = executionService.executeTrade(4, TradeType.BUY, "ACC2", "SEC234", 30);
 		assertEquals("ACC1", accountPositionsMap.get("ACC1").getAccount().toString());
 		assertEquals("ACC2", accountPositionsMap.get("ACC2").getAccount().toString());
-		assertEquals(new Integer(12), accountPositionsMap.get("ACC1").getNewQuantity());
-		assertEquals(new Integer(30), accountPositionsMap.get("ACC2").getNewQuantity());
+		assertEquals(new Integer(12), accountPositionsMap.get("ACC1").getCurrentQuantity());
+		assertEquals(new Integer(30), accountPositionsMap.get("ACC2").getCurrentQuantity());
 
+	}
+
+	@Test
+	public void buyAndCancelSecuritiesThenBuySecuritiesForSameAccount() throws Exception {
+		accountPositionsMap = executionService.executeTrade(1, TradeType.BUY, "ACC1", "SEC1", 100);
+		accountPositionsMap = executionService.executeTrade(2, TradeType.CANCEL, "ACC1", "SEC1", 0);
+		accountPositionsMap = executionService.executeTrade(3, TradeType.BUY, "ACC1", "SEC1", 5);
+		assertEquals(new Integer(5), accountPositionsMap.get("ACC1").getCurrentQuantity());
 	}
 
 	@Test
 	public void sellSecuritiesWhichDoesNotExist() {
 
 		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-			execution.executeTrade(1, TradeType.SELL, "ACC1", "SEC1", 12);
+			executionService.executeTrade(1, TradeType.SELL, "ACC1", "SEC1", 12);
 		});
 		assertEquals("Security not found", exception.getMessage());
 
@@ -87,20 +97,11 @@ public class PositionBookTest {
 	public void buySecurityWithDuplicateId() throws Exception {
 
 		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-			execution.executeTrade(1, TradeType.BUY, "ACC1", "SEC1", 12);
-			execution.executeTrade(1, TradeType.BUY, "ACC1", "SEC1", 12);
+			executionService.executeTrade(1, TradeType.BUY, "ACC1", "SEC1", 12);
+			executionService.executeTrade(1, TradeType.BUY, "ACC1", "SEC1", 12);
 		});
 		assertEquals("Invalid  ID: 1. It already exists!", exception.getMessage());
 
-	}
-
-	
-	@Test
-	public void buyNewSecuritiesCancelItAndBuyForSameAccount() throws Exception {
-		accountPositionsMap = execution.executeTrade(1, TradeType.BUY, "ACC1", "SEC1", 100);
-		accountPositionsMap = execution.executeTrade(2, TradeType.CANCEL, "ACC1", "SEC1", 0);
-		accountPositionsMap = execution.executeTrade(3, TradeType.BUY, "ACC1", "SEC1", 5);
-		assertEquals(new Integer(5), accountPositionsMap.get("ACC1").getNewQuantity());
 	}
 
 }

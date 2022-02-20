@@ -1,6 +1,7 @@
 package com.jpmc.realtimepositionsystem.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,24 +13,25 @@ import com.jpmc.realtimepositionsystem.tradeentities.TradeType;
 public class PositionService {
 
     // Accountid, Position
-    private Map<String, Position> accountPositions = new HashMap<>();
+    private Map<String, Position> positionMap = new HashMap<>();
     private Position position;
 
 
     public Map<String, Position> addToPositions(String accountId, Trade trade) throws Exception {
 
-        if (this.accountPositions.get(accountId) == null) {
-            this.accountPositions.put(accountId, new Position(new Account(accountId)));
+        if (this.positionMap.get(accountId) == null) {
+            this.positionMap.put(accountId, new Position(new Account(accountId)));
         }
-        position = this.accountPositions.get(accountId);
+        position = this.positionMap.get(accountId);
 
         if (trade.getTradeType() == TradeType.BUY) {
-            this.buyTrade(trade);
+            buyTrade(trade);
         }
         if (trade.getTradeType() == TradeType.SELL || trade.getTradeType() == TradeType.CANCEL) {
-            this.sellOrCancelTrade(trade);
+            sellOrCancelTrade(trade);
         }
-        return accountPositions;
+        Collections.unmodifiableMap(positionMap);
+        return positionMap;
 
     }
 
@@ -59,18 +61,18 @@ public class PositionService {
             //validating duplication
             if (position.getTrades(securitySymbol).stream().filter(t -> t.getId().equals(trade.getId())).findFirst().isPresent())
                 throw new IllegalArgumentException("Invalid  ID: " + trade.getId() + ". It already exists!");
-            position.setNewQuantity(position.getSecurityPosition(securitySymbol) + trade.getQuantity());
+            position.setCurrentQuantity(position.getSecurityPosition(securitySymbol) + trade.getQuantity());
         } else if (trade.getTradeType() == TradeType.SELL) {
-            position.setNewQuantity(position.getSecurityPosition(securitySymbol) - trade.getQuantity());
+            position.setCurrentQuantity(position.getSecurityPosition(securitySymbol) - trade.getQuantity());
         } else if (trade.getTradeType() == TradeType.CANCEL) {
             Trade lastTrade = position.getTrades(securitySymbol).get(position.getTrades(securitySymbol).size() - 1);
             if (lastTrade.getTradeType() != TradeType.BUY) {
                 throw new Exception("Trade cancellation failed");
             }
-            position.setNewQuantity(position.getSecurityPosition(securitySymbol) - lastTrade.getQuantity());
+            position.setCurrentQuantity(position.getSecurityPosition(securitySymbol) - lastTrade.getQuantity());
         }
-        position.setSecurityPosition(securitySymbol, position.getNewQuantity());
-        position.getTrades(securitySymbol).add(trade);
-
+        position.setSecurityPosition(securitySymbol, position.getCurrentQuantity());
+        position.addTrade(securitySymbol,trade);
     }
+
 }
